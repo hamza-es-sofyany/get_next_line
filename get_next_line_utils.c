@@ -6,7 +6,7 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/11 17:24:16 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/11 17:24:18 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/13 17:41:31 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[i])
 		i++;
@@ -101,12 +103,13 @@ char	*extract_line(char *stash)
 	return (str);
 }
 
-char	*clean_stash(char *stash)
+char	*clean_stash(char *stash, int *error)
 {
 	size_t	i;
 	size_t	j;
 	char	*str;
 
+	*error = 0;
 	if (!stash)
 		return (NULL);
 	i = 0;
@@ -117,7 +120,10 @@ char	*clean_stash(char *stash)
 	i++;
 	str = malloc(ft_strlen(&stash[i]) + 1);
 	if (!str)
+	{
+		*error = 1;
 		return (NULL);
+	}
 	j = 0;
 	while (stash[i])
 		str[j++] = stash[i++];

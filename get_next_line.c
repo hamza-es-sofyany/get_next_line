@@ -6,123 +6,92 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/11 17:26:29 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/12 15:35:18 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/13 17:37:38 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "get_next_line.h"
-#include <fcntl.h>
-#include <stdio.h>
 
-
-// static int fill_stash(int fd, char **stash)
-// {
-    
-// }
-
-// char *get_next_line(int fd)
-// {
-//     static char *stash;
-//     char    *str;
-//     char    buffer[BUFFER_SIZE + 1];
-//     ssize_t byt;
-
-//     if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
-//         return (NULL);
-//     byt = 1;
-//     while (byt > 0)
-//     {
-//         byt = read(fd, buffer, BUFFER_SIZE);
-//         if (byt > 0)
-//         {
-//             if (byt > 0)
-//                 buffer[byt] = '\0';
-//             str = append_buffer(stash, buffer);
-//             if (!str)
-//                 return (NULL);
-//              stash = str;
-//              free(str);
-//         }
-//         extract_line(stash);
-//         clean_stash(stash);
-//     }
-//     return (stash);
-// }
-
-
-
-
-#include "get_next_line.h"
-
-static int	fill_stash(int fd, char **stash)
+static int	ft_has_newline(const char *s)
 {
-	char	*buffer;
-	char	*new_stash;
-	ssize_t	bytes_read;
-	size_t	i;
+	ssize_t	i;
 
-	buffer = malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (-1);
+	if (!s)
+		return (0);
 	i = 0;
-	while ((*stash)[i] && (*stash)[i] != '\n')
+	while (s[i] && s[i] != '\n')
 		i++;
-	while (!(*stash)[i])
-	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read < 0)
-			return (free(buffer), -1);
-		if (bytes_read == 0)
-			break ;
-		buffer[bytes_read] = '\0';
-		new_stash = append_buffer(*stash, buffer);
-		if (!new_stash)
-			return (free(buffer), -1);
-		free(*stash);
-		*stash = new_stash;
-		i = 0;
-		while ((*stash)[i] && (*stash)[i] != '\n')
-			i++;
-	}
-	free(buffer);
+	if (s[i] == '\n')
+		return (1);
 	return (0);
+}
+
+static char	*ft_join_and_free(char *stash, char *buf)
+{
+	char	*tmp;
+
+	tmp = append_buffer(stash, buf);
+	free(stash);
+	return (tmp);
+}
+
+static char	*ft_free_null(char *s1, char *s2)
+{
+	free(s1);
+	free(s2);
+	return (NULL);
+}
+
+static char	*ft_read_stash(int fd, char *stash)
+{
+	ssize_t	byt;
+	char	*buf;
+
+	if (ft_has_newline(stash))
+		return (stash);
+	buf = malloc(BUFFER_SIZE + 1);
+	if (!buf)
+		return (ft_free_null(stash, NULL));
+	byt = 1;
+	while (!ft_has_newline(stash) && byt > 0)
+	{
+		byt = read(fd, buf, BUFFER_SIZE);
+		if (byt < 0)
+			return (ft_free_null(stash, buf));
+		if (byt == 0)
+			break ;
+		buf[byt] = '\0';
+		stash = ft_join_and_free(stash, buf);
+		if (!stash)
+			break ;
+	}
+	free(buf);
+	return (stash);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*stash;
+	static char	*str;
 	char		*line;
-	char		*remaining;
+	char		*tmp;
+	int			error;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
+	{
+		str = ft_free_null(str, NULL);
 		return (NULL);
-	if (fill_stash(fd, &stash) < 0)
+	}
+	str = ft_read_stash(fd, str);
+	line = extract_line(str);
+	if (!str || !str[0] || !line)
+	{
+		str = ft_free_null(str, line);
 		return (NULL);
-	if (!stash || !stash[0])
-		return (free(stash), stash = NULL, NULL);
-	line = extract_line(stash);
-	if (!line)
-		return (NULL);
-	remaining = clean_stash(stash);
-	free(stash);
-	stash = remaining;
+	}
+	tmp = clean_stash(str, &error);
+	free(str);
+	str = tmp;
+	if (error)
+		return (ft_free_null(line, NULL));
 	return (line);
-}
-
-int main(void)
-{
-    int     fd;
-    char    *line;
-
-    fd = open("sample.txt", O_RDONLY);
-    if (fd < 0)
-        return (1);
-    while ((line = get_next_line(fd)) != NULL)
-    {
-        printf("%s", line);
-        free(line);
-    }
-    close(fd);
-    return (0);
 }
