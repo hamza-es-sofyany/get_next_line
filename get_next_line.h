@@ -6,7 +6,7 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/11 17:24:03 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/14 11:08:03 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/16 17:04:22 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 10
 # endif
 
 size_t	ft_strlen(const char *s);
