@@ -6,7 +6,7 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/11 17:26:29 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/16 15:02:04 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/16 16:13:19 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,22 +96,4 @@ char	*get_next_line(int fd)
 	if (error)
 		return (ft_free_null(line, NULL));
 	return (line);
-}
-
-#include <fcntl.h>
-#include <stdio.h>
-int	main()
-{
-	int fd;
-	char	*lien;
-	fd = open("sample.txt", O_RDONLY);
-	lien = get_next_line(fd);
-	// printf("%s fd = %d\n",lien,fd);
-	while (lien)
-	{
-		printf("%s",lien);
-		lien = get_next_line(fd);
-	}
-	printf("%s",lien);
-	
 }
