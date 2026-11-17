@@ -24,7 +24,7 @@ A `main.c` file is required for testing and is not included in the project. It s
 
 ### Buffer Size
 
-The default value of `BUFFER_SIZE` is `42`, as defined in `get_next_line.h`.
+The default value of `BUFFER_SIZE` is `10`, as defined in `get_next_line.h`.
 
 You can override this value at compilation time using the `-D` flag. For example:
 
