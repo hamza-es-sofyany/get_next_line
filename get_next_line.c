@@ -6,7 +6,7 @@
 /*   By: hes-sofy <hes-sofy@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/11 17:26:29 by hes-sofy          #+#    #+#             */
-/*   Updated: 2026/11/16 17:21:53 by hes-sofy         ###   ########.fr       */
+/*   Updated: 2026/11/18 13:30:51 by hes-sofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	ft_has_newline(const char *s)
 {
-	ssize_t	i;
+	size_t	i;
 
 	if (!s)
 		return (0);
@@ -49,7 +49,7 @@ static char	*ft_read_stash(int fd, char *stash)
 
 	if (ft_has_newline(stash))
 		return (stash);
-	buf = malloc(BUFFER_SIZE + 1);
+	buf = malloc((size_t)BUFFER_SIZE + 1);
 	if (!buf)
 		return (ft_free_null(stash, NULL));
 	byt = 1;
